@@ -138,7 +138,7 @@ class Cell(nn.Module):
         self.spec = ModelSpec(matrix, ops)
         self.matrix = self.spec.matrix
         self.ops = self.spec.ops
-        self.G = nx.from_numpy_matrix(matrix, create_using=nx.DiGraph)
+        self.G = nx.from_numpy_matrix(self.matrix, create_using=nx.DiGraph)
         self.num_nodes = len(self.ops)
         
         for i in range(self.num_nodes):
