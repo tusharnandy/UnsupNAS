@@ -166,7 +166,7 @@ class Cell(nn.Module):
                 input += self.G.nodes[neighbor]['output']
             self.G.nodes[n]['output'] = self.layers[n-1](input)
         n += 1
-        if 0 in self.nodes[n]['incoming']:
+        if 0 in self.G.nodes[n]['incoming']:
           self.G.nodes[0]['output'] = self.layers[-1](x)
         arr = [self.G.nodes[n]['output'] for n in self.G.nodes[self.num_nodes-1]['incoming']]
         outputs = torch.cat(arr, 1)
