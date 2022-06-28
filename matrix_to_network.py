@@ -130,20 +130,13 @@ class BasicConv2d(nn.Module):
 class Cell(nn.Module):
     def __init__(self, in_channels, matrix, ops):
         super(Cell, self).__init__()
-        # The input ops and the corresponding adj matrix may not necessarily
-        # be a 7-node graph. In that case we need to prune the graph to set in order.
-        # This is handled by the class ModelSpec.
-        # For more on ModelSpec: https://github.com/google-research/nasbench/blob/b94247037ee470418a3e56dcb83814e9be83f3a8/nasbench/lib/model_spec.py#L37
-
-        self.spec = ModelSpec(matrix, ops)
-        self.matrix = self.spec.matrix
-        self.ops = self.spec.ops
-        self.G = nx.from_numpy_matrix(self.matrix, create_using=nx.DiGraph)
-        self.num_nodes = len(self.ops)
+        
+        self.G = nx.from_numpy_matrix(matrix, create_using=nx.DiGraph)
+        self.num_nodes = len(ops)
         
         for i in range(self.num_nodes):
             self.G.nodes[i]['label'] = i
-            self.G.nodes[i]['op_label'] = self.ops[i]
+            self.G.nodes[i]['op_label'] = ops[i]
             self.G.nodes[i]['incoming'] = [n for n in self.G.reverse().neighbors(i)]
             self.G.nodes[i]['outgoing'] = [n for n in self.G.neighbors(i)]
         
@@ -189,21 +182,26 @@ class CustomPool(nn.Module):
 class CNN(nn.Module):
     def __init__(self, matrix, ops):
         super(CNN, self).__init__()
+        
+        self.spec = ModelSpec(matrix, ops)
+        self.matrix = self.spec.matrix
+        self.ops = self.spec.ops
+
         self.convstem = BasicConv2d(3, 128, kernel_size=3, padding=1) # 32x32
         
         self.stack1 = nn.ModuleList()
         for _ in range(3):
-            self.stack1.append(Cell(128, matrix, ops))
+            self.stack1.append(Cell(128, self.matrix, self.ops))
         self.stack1.append(CustomPool(128)) # 16x16
 
         self.stack2 = nn.ModuleList()
         for _ in range(3):
-            self.stack2.append(Cell(256, matrix, ops))
+            self.stack2.append(Cell(256, self.matrix, self.ops))
         self.stack2.append(CustomPool(256)) # 8X8
 
         self.stack3 = nn.ModuleList()
         for _ in range(3):
-            self.stack3.append(Cell(512, matrix, ops))
+            self.stack3.append(Cell(512, self.matrix, self.ops))
         self.global_pool = nn.MaxPool2d(8)
 
         self.fc1 = nn.Linear(512, 512)
