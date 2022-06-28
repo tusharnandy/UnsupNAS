@@ -37,7 +37,7 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
 classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-json_file = open(args.arch, 'r')
+json_file = open(args.archfile, 'r')
 spec = json.load(json_file)
 matrix = spec['original_matrix']
 ops = spec['original_ops']
