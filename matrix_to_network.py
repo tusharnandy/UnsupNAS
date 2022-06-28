@@ -165,7 +165,7 @@ class Cell(nn.Module):
             for neighbor in self.G.nodes[n]['incoming']:
                 input += self.G.nodes[neighbor]['output']
             self.G.nodes[n]['output'] = self.layers[n-1](input)
-        outputs = torch.cat([self.G.nodes[n]['output'] for n in self.G.nodes[6]['incoming']], 1)
+        outputs = torch.cat([self.G.nodes[n]['output'] for n in self.G.nodes[self.num_nodes-1]['incoming']], 1)
         return outputs
 
 class CustomPool(nn.Module):
