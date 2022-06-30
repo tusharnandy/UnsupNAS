@@ -5,4 +5,11 @@ UnsupNAS stands for Unsupervised Representation of Architectures for Neural Arch
 
 matrix_to_network.py converts adjacency matrices of cells** to fully trainable CNNs. train.py is the driver code to train these networks. Have a look at the command line arguments of train.py before running it.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tusharnandy/UnsupNAS-toolkit/blob/main/Network.ipynb)
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1AMj9vBr5toPuYX1FEBAKcvdK0qpgfBqG?usp=sharing)
+
+---
+->* *This project is funded by Google Research India*
+
+
+->** *Check out https://github.com/google-research/nasbench*
